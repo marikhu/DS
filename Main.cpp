@@ -135,7 +135,7 @@ void CB(cv::Mat &frame, int num){
 
 void Go() {
 	std::string root = _imgDir;
-    int iNumImages = 100;
+    int iNumImages = 1000;
 	for (int i = 1; i < iNumImages; i++) {
 		std::string path = root;
 		path += to6dStr(i);
