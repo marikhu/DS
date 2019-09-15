@@ -159,6 +159,10 @@ int main(int argc, char **argv){
 	//_rcFile = "e:/code/deep_sort-master/MOT16/tt/xyz/det/det.txt";
 	_imgDir = "/home/xyz/code1/xyz/img1/";
 	_rcFile = "/home/xyz/code1/xyz/det/det.txt";
+
+    _imgDir = "/media/marikhu/data/Benchmark/MOT16/test/MOT16-06/img1/";
+    _rcFile = "/media/marikhu/data/Benchmark/MOT16/test/MOT16-06/det/det.txt";
+
 	//_rcFile = "/home/xyz/code/test/pp/FaceNumGetter/out/102.txt";
 
 
