@@ -24,22 +24,37 @@ void ExtractFeatureHog(const cv::Mat &in,
 	std::vector<FEATURE> &fts){
 	cv::Mat frame;
 	cvtColor(in, frame, cv::COLOR_RGB2GRAY);
+std::cout << "start of ExtractFeatureHOG" << std::endl;
 	for(int i = 0; i < rcsin.size(); i++){
-		Mat nnn = frame(rcsin[i]);
+        std::cout << "i: " << i << " of " << rcsin.size() << std::endl;
+        std::cout << "rcsin[i]: x " << rcsin[i].x << " y " << rcsin[i].y << " w " << rcsin[i].width << " h " << rcsin[i].height << std::endl;
+        std::cout << "frame: rows " << frame.rows << " cols " << frame.cols << std::endl;
+        // NOTE: The rect ROI could go beyond the frame.
+        // Reduce the rect to get the crop to lie within the frame.
+        Rect rect = rcsin[i];
+        if(rect.x + rect.width > frame.cols) rect.width -= (rect.x+rect.width  - frame.cols);
+        if(rect.y+rect.height > frame.rows) rect.height -= (rect.y + rect.height - frame.rows);
+		Mat nnn = frame(rect);
+        std::cout << "nnn " << nnn.rows << std::endl;
 		resize(nnn, nnn, Size(32, 32));
 		int len = 0;
+        std::cout << "i: " << i << " into HOGXYZ" << std::endl;
 		float *hog = HOGXYZ(nnn, len);
+        std::cout << "i: " << i << " out of HOGXYZ "<< std::endl;
 		if(hog==NULL || len!=128){
 			printf("hog(%d) is null or len(%d)!=128,exit!\n", hog==NULL, len);
 			exit(0);
 		}
 		FEATURE ft;
+        std::cout << "i: " << i << " ft stuff "<< std::endl;
 		for(int j = 0; j < len; j++){
 			ft(j) = hog[j];
 		}
+        std::cout << "i: " << i << " out of ft stuff "<< std::endl;
 		delete []hog;
 		fts.push_back(ft);
 	}
+std::cout << "end of ExtractFeatureHOG" << std::endl;
 }
 #ifdef UDL
 void ExtractFeature(const cv::Mat &in, 
@@ -153,10 +168,13 @@ NewAndDelete NT::UpdateDS(const cv::Mat &frame, const std::vector<cv::Rect> &rcs
 		std::vector<FEATURE> fts;
 		if(rcs.size() > 0){
 #ifdef UHOG
+std::cout <<  "ExtractFeatureHog" << std::endl;
 			ExtractFeatureHog(frame, rcs, fts);
 #else
+std::cout <<  "ExtractFeature" << std::endl;
 			ExtractFeature(frame, rcs, fts);
 #endif
+std::cout <<  "Features extracted." << std::endl;
 		}
 		int64_t tm2 = gtm();
 		for (int i = 0; i < rcs.size(); i++){	
@@ -270,7 +288,9 @@ std::map<int, DSResult> NT::UpdateAndGet(const cv::Mat &frame,
 	}
 	std::cout << "NT::UpdateAndGet1.5\n";
 	outRcs = rcs;
+    std::cout << "1" << std::endl;
 	NewAndDelete nad = UpdateDS(frame, rcs, num, oriPos);
+    std::cout << "2" << std::endl;
 
 
 	std::map<int, DSResult> map;

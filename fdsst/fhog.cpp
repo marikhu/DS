@@ -518,6 +518,7 @@ float* fhog(float* I,int height,int width,int channel,int *h,int *w,int *d,int b
     delete []M;delete []O;
     if(!crop)
         return H;
+    cout << "A" << endl;
     return crop_H(H,h,w,*d,height%binSize < binSize/2,width%binSize < binSize/2);
 }
 
@@ -554,7 +555,9 @@ float* HOGXYZ(const cv::Mat& input, int &len){
     float *I = new float[HEIGHT*WIDTH*DEPTH];
     change_format(I,II,HEIGHT,WIDTH,DEPTH);
     int h,w,d;
+cout << "at fhog" << endl;
     float* HH = fhog(I,HEIGHT,WIDTH,DEPTH,&h,&w,&d,binSize,nOrients,clip,crop);
+cout << "out of fhog" << endl;
     if(HH == NULL){
 		delete []I;
 		delete []II;
@@ -563,7 +566,9 @@ float* HOGXYZ(const cv::Mat& input, int &len){
 	printf("fhog563:(WIDTH:%d, HEIGHT:%d, DEPTH:%d, w:%d, h:%d, d:%d)\n", 
 		WIDTH, HEIGHT, DEPTH, w, h, d);
     float* H = new float[h*w*d];
+cout << "before change_format" << endl;
     change_format(H,HH,d,w,h);
+cout << "after change_format" << endl;
     delete []II;delete []I;delete []HH;
 	len = w*h*d;
     return H;
@@ -601,10 +606,13 @@ cv::Mat fhog(const cv::Mat& input, int binSize, int nOrients, float clip, bool c
 	printf("fhog563:(WIDTH:%d, HEIGHT:%d, DEPTH:%d, w:%d, h:%d, d:%d)\n", 
 		WIDTH, HEIGHT, DEPTH, w, h, d);
     float* H = new float[h*w*d];
+cout << "A" << endl;
     change_format(H,HH,d,w,h);
+cout << "B" << endl;
     cv::Mat fhog_feature(h,w,CV_32FC(32),H);
 	cv::Mat out = fhog_feature.clone();
     delete []II;delete []I;delete []HH;
 	delete []H;
+cout << "C" << endl;
     return out;
 }

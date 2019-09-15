@@ -98,7 +98,6 @@ std::string _rcFile = "";
 std::string _imgDir;
 cv::VideoWriter *_vw = NULL;
 bool _isShow = false;
-int _imgCount = 0;
 
 void CB(cv::Mat &frame, int num){
 	if (_vw == NULL) {
@@ -121,12 +120,14 @@ void CB(cv::Mat &frame, int num){
 	bool detect = (!rcs.empty());
 	DrawData(mm, frame, map, outRcs, detect);
 	printf("finish %d frame, updatecasttime:%ld\n", num, tm1-tm0);
-	//(*_vw) << frame;
+	(*_vw) << frame;
 	if(_isShow){
 		std::string disp = "frame";
 		cv::resize(mm, mm, cv::Size(mm.cols/2, mm.rows/2));
 		cv::resize(frame, frame, cv::Size(frame.cols/2, frame.rows/2));
+        cv::namedWindow("mm", 0);
 		cv::imshow("mm", mm);
+        cv::namedWindow(disp, 0);
 		cv::imshow(disp, frame);
 		cv::waitKey(1);
 	}
@@ -134,7 +135,8 @@ void CB(cv::Mat &frame, int num){
 
 void Go() {
 	std::string root = _imgDir;
-	for (int i = 1; i < _imgCount; i++) {
+    int iNumImages = 100;
+	for (int i = 1; i < iNumImages; i++) {
 		std::string path = root;
 		path += to6dStr(i);
 		path += ".jpg";
@@ -155,20 +157,21 @@ int main(int argc, char **argv){
 		return 0;
 	}
 
+#if 0
 	//_imgDir = "e:/code/deep_sort-master/MOT16/tt/xyz/img1/";
 	//_rcFile = "e:/code/deep_sort-master/MOT16/tt/xyz/det/det.txt";
-	_imgDir = "/home/xyz/code1/xyz/img1/";
-	_rcFile = "/home/xyz/code1/xyz/det/det.txt";
+	//_imgDir = "/home/xyz/code1/xyz/img1/";
+	//_rcFile = "/home/xyz/code1/xyz/det/det.txt";
+	//_rcFile = "/home/xyz/code/test/pp/FaceNumGetter/out/102.txt";
+	//_imgDir = "/home/xyz/code1/GEP/FrameBuffer/imglog/img1/";
+	//_rcFile = "/home/xyz/code1/GEP/FrameBuffer/imglog/det/det.txt";
+#endif
 
     _imgDir = "/media/marikhu/data/Benchmark/MOT16/test/MOT16-06/img1/";
     _rcFile = "/media/marikhu/data/Benchmark/MOT16/test/MOT16-06/det/det.txt";
 
-	//_rcFile = "/home/xyz/code/test/pp/FaceNumGetter/out/102.txt";
-
-
-	//_imgDir = "/home/xyz/code1/GEP/FrameBuffer/imglog/img1/";
-	//_rcFile = "/home/xyz/code1/GEP/FrameBuffer/imglog/det/det.txt";
-	_imgCount = 650;// 2001;// 750;// 680;
 	Go();
+
+    if(_vw) _vw->release();
 	return 0;
 }
