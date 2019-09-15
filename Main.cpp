@@ -107,6 +107,7 @@ void CB(cv::Mat &frame, int num){
 		ReadRcFileTotal(_rcFile);
 	}
 	std::vector<cv::Rect> rcs;
+    // Obtain the rectangles for this frame "num"
 	std::map<int, std::vector<cv::Rect>>::iterator it = _rcMap.find(num);
 	if (it != _rcMap.end()) {
 		rcs = it->second;
