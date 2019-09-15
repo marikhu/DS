@@ -18,12 +18,12 @@ BAZEL=`getbazel`
 
 
 
-INCLUDEPATH="-I/usr/local/opencv-2.4.13.2/include -I/usr/local/opencv-2.4.13.2/include/opencv -I/usr/include -I /usr/include/eigen3/Eigen "
+INCLUDEPATH="-I/usr/local/opencv-2.4.13.2/include -I/usr/local/opencv-2.4.13.2/include/opencv -I/usr/include -I /usr/include/eigen3/Eigen -I /usr/include/tbb "
 
 
 LLIBPATH="-L/usr/local/opencv-2.4.13.2/lib -L/usr/local/lib -L/usr/lib -L/media/marikhu/work/GitHub/DS/deepsort/FeatureGetter"
 
-rm DS -rf
+#rm -rf DS
 
 
 function BOPENMP(){
@@ -34,7 +34,7 @@ function BOPENMP(){
 
 function BTBB(){
 	LLIBS="-lopencv_core -lopencv_imgproc -lopencv_highgui -lFeatureGetter -lboost_system -lglog -ltbb"
-	g++ --std=c++14 -DUSETBB -o DS $INCLUDEPATH $LLIBPATH deepsort/munkres/munkres.cpp deepsort/munkres/adapters/adapter.cpp deepsort/munkres/adapters/boostmatrixadapter.cpp  NT.cpp Main.cpp $LLIBS
+	g++ --std=c++14 -DUSETBB -o DS $INCLUDEPATH $LLIBPATH deepsort/munkres/munkres.cpp deepsort/munkres/adapters/adapter.cpp deepsort/munkres/adapters/boostmatrixadapter.cpp fdsst/fdssttracker.cpp fdsst/fhog.cpp NT.cpp Main.cpp $LLIBS
 }
 
 
@@ -43,7 +43,8 @@ function BOPENMPHOG(){
 	g++ --std=c++14 -O3 -fopenmp -o DS $INCLUDEPATH $LLIBPATH  deepsort/munkres/munkres.cpp deepsort/munkres/adapters/adapter.cpp deepsort/munkres/adapters/boostmatrixadapter.cpp  NT.cpp fdsst/fdssttracker.cpp fdsst/fhog.cpp Main.cpp $LLIBS
 }
 
-BOPENMPHOG
+#BOPENMPHOG
+BTBB
 
 
 
